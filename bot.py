@@ -301,6 +301,10 @@ def procesar_evento(datos):
     config = cargar_respuestas()  # se relee cada vez: puedes editar el JSON sin reiniciar
     for entrada in datos.get("entry", []):
         mi_id = str(entrada.get("id", ""))
+        # Los avisos llegan reenviados desde el bot de Iron Element; si en el mismo
+        # aviso viene algo de otra cuenta (ej. el gym), no es para este bot.
+        if IG_ACCOUNT_ID and mi_id and mi_id != IG_ACCOUNT_ID:
+            continue
         for cambio in entrada.get("changes", []):
             if cambio.get("field") == "comments":
                 procesar_comentario(cambio.get("value") or {}, mi_id, config)
