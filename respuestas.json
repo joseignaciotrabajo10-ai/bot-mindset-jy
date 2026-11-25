@@ -1,0 +1,135 @@
+{
+  "minutos_entre_respuestas": 180,
+  "horas_pausa_si_responde_equipo": 3,
+  "seguimiento": {
+    "activo": true,
+    "minutos": 10,
+    "despues_de": [
+      "programa",
+      "precio"
+    ],
+    "texto": "¡Hola de nuevo {nombre}! 👋\n\n¿Te hizo sentido el programa? Si trabajas por turnos y quieres bajar esos kilos de una vez, este es el momento 💪\n\n{cierre}"
+  },
+  "comentarios": {
+    "activo": true,
+    "respuesta_publica": "¡Te envié la info por DM! 📩🔥"
+  },
+  "cierre": "🔥 Si quieres saber si el programa es para ti, déjame tu WhatsApp y te contacto personalmente para conversar tu caso 📲\n\nY si tienes otra pregunta, escríbela por aquí y te respondo 🙌",
+  "reglas": [
+    {
+      "nombre": "whatsapp recibido",
+      "patron": "(?<!\\d)(\\+?\\s*56[\\s.\\-]*)?9(?:[\\s.\\-]*\\d){8}(?!\\d)",
+      "exclusiva": true,
+      "palabras_clave": [],
+      "respuesta": [
+        {
+          "texto": "¡Muchas gracias {nombre}! 🙌\n\nTe voy a escribir por WhatsApp muy pronto para conversar tu caso y ver cómo te puedo ayudar 💪\n\n¡Vamos con todo! 🏆"
+        }
+      ],
+      "excepto": [
+        "rut"
+      ]
+    },
+    {
+      "nombre": "programa",
+      "palabras_clave": [
+        "info",
+        "informacion",
+        "programa",
+        "mindset",
+        "coaching",
+        "asesoria",
+        "asesoramiento",
+        "como funciona",
+        "me interesa",
+        "quiero",
+        "bajar de peso",
+        "perder peso",
+        "bajar peso",
+        "adelgazar",
+        "kilos",
+        "unirme",
+        "inscribirme",
+        "como entro"
+      ],
+      "respuesta": [
+        {
+          "texto": "¡Hola {nombre}! 👋 Gracias por escribir 🙌\n\nJOSE IGNACIO MINDSET es un programa de coaching exclusivo para personas que trabajan en minería o por turnos 🏗️⛏️\n\nCon mi método Mindset te ayudo a perder de 8 a 12 kilos, generando hábitos sustentables y una mentalidad inquebrantable 🧠💪\n\nYa son más de 50 casos de éxito 🏆\n\nLos programas son 100% trimestrales: tres meses de compromiso con tu objetivo, el tiempo justo para que los cambios se queden contigo.\n\n{cierre}"
+        }
+      ]
+    },
+    {
+      "nombre": "precio",
+      "palabras_clave": [
+        "precio",
+        "precios",
+        "valor",
+        "valores",
+        "plan",
+        "planes",
+        "cuanto sale",
+        "cuanto cuesta",
+        "cuanto vale",
+        "cuanto valen",
+        "cuanto es",
+        "costo",
+        "tarifa",
+        "mensualidad"
+      ],
+      "respuesta": [
+        {
+          "texto": "¡Hola {nombre}! 👋\n\nMis programas son 100% trimestrales 📅 Son tres meses trabajando juntos para que bajes de 8 a 12 kilos y, sobre todo, para que no los vuelvas a subir 💪\n\nEl valor depende de tu caso y tus turnos, por eso prefiero contártelo personalmente 🙌\n\n{cierre}"
+        }
+      ]
+    },
+    {
+      "nombre": "turnos",
+      "palabras_clave": [
+        "turno",
+        "turnos",
+        "mineria",
+        "minero",
+        "minera",
+        "faena",
+        "7x7",
+        "4x4",
+        "4x3",
+        "10x10",
+        "14x14",
+        "sistema de turnos",
+        "campamento"
+      ],
+      "respuesta": [
+        {
+          "texto": "¡Hola {nombre}! 👋\n\nSé lo difícil que es mantenerse en forma con turnos: comida de casino, horarios cambiados, poco descanso y días de bajada sin rutina 😮‍💨\n\nPor eso creé el método Mindset, pensado 100% para quienes trabajan en minería o por turnos ⛏️ Adaptamos la alimentación y el entrenamiento a tu sistema, tanto en faena como en tus días libres 💪\n\n{cierre}"
+        }
+      ]
+    },
+    {
+      "nombre": "resultados",
+      "palabras_clave": [
+        "resultados",
+        "resultado",
+        "casos",
+        "testimonios",
+        "testimonio",
+        "funciona",
+        "sirve",
+        "antes y despues"
+      ],
+      "respuesta": [
+        {
+          "texto": "¡Hola {nombre}! 👋\n\nYa son más de 50 casos de éxito con el método Mindset 🏆 Personas que trabajan por turnos y lograron bajar de 8 a 12 kilos en un trimestre, con hábitos que se mantienen en el tiempo 💪\n\nPuedes ver varios de sus cambios en mis publicaciones y destacados 📲\n\n{cierre}"
+        }
+      ]
+    }
+  ],
+  "bienvenida": {
+    "activa": false,
+    "respuesta": [
+      {
+        "texto": "¡Hola {nombre}! 👋 Gracias por escribir. En un rato te respondo 🙌"
+      }
+    ]
+  }
+}
