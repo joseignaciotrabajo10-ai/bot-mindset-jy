@@ -604,6 +604,17 @@ class Manejador(BaseHTTPRequestHandler):
             datos = json.loads(cuerpo)
         except ValueError:
             return
+        # Resumen de cada aviso que llega (para diagnosticar qué manda Meta).
+        try:
+            tipos = []
+            for e in datos.get("entry", []):
+                for clave in ("messaging", "standby"):
+                    if e.get(clave):
+                        tipos.append(f"{clave}x{len(e[clave])}")
+                tipos += [f"changes:{c.get('field')}" for c in e.get("changes", [])]
+            log(f"Aviso de Meta ({datos.get('object')}): {', '.join(tipos) or 'vacío'}")
+        except Exception:
+            pass
         threading.Thread(target=self._procesar_seguro, args=(datos,), daemon=True).start()
 
     @staticmethod
