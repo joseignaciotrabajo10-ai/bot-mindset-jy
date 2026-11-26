@@ -61,6 +61,8 @@ IG_ACCOUNT_ID = os.environ.get("IG_ACCOUNT_ID", "").strip()
 TOKEN_FACEBOOK = ACCESS_TOKEN.startswith("EAA")
 API_BASE = f"https://graph.{'facebook' if TOKEN_FACEBOOK else 'instagram'}.com/{API_VERSION}"
 CUENTA = IG_ACCOUNT_ID if TOKEN_FACEBOOK else "me"
+# IDs con que Meta identifica a esta cuenta (se completan solos al arrancar).
+MIS_IDS = {IG_ACCOUNT_ID} if IG_ACCOUNT_ID else set()
 # Para guardar el token renovado en Render (RENDER_SERVICE_ID lo pone Render solo).
 RENDER_API_KEY = os.environ.get("RENDER_API_KEY", "").strip()
 RENDER_SERVICE_ID = os.environ.get("RENDER_SERVICE_ID", "").strip()
@@ -303,7 +305,8 @@ def procesar_evento(datos):
         mi_id = str(entrada.get("id", ""))
         # Los avisos llegan reenviados desde el bot de Iron Element; si en el mismo
         # aviso viene algo de otra cuenta (ej. el gym), no es para este bot.
-        if IG_ACCOUNT_ID and mi_id and mi_id != IG_ACCOUNT_ID:
+        if MIS_IDS and mi_id and mi_id not in MIS_IDS:
+            log(f"  aviso para otra cuenta (ID {mi_id}), se ignora")
             continue
         for cambio in entrada.get("changes", []):
             if cambio.get("field") == "comments":
@@ -480,6 +483,24 @@ def enviar_seguimiento(usuario, nombre, programado):
         log("ERROR en seguimiento:", repr(e))
 
 
+def obtener_mis_ids(token):
+    """Pregunta a Instagram los números con que Meta identifica a ESTA cuenta.
+    Con inicio de sesión de Instagram, el aviso puede traer "id" o "user_id"."""
+    req = urllib.request.Request(
+        f"https://graph.instagram.com/{API_VERSION}/me?fields=id,user_id,username",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            datos = json.loads(r.read())
+    except (urllib.error.URLError, ValueError, OSError) as e:
+        log("AVISO: no se pudo saber el ID de la cuenta:", e)
+        return set()
+    ids = {str(datos[c]) for c in ("id", "user_id") if datos.get(c)}
+    log(f"Cuenta de Instagram: @{datos.get('username')} (IDs {', '.join(sorted(ids))})")
+    return ids
+
+
 def firma_valida(cuerpo, firma):
     if not APP_SECRETS:
         return True  # sin APP_SECRET no se verifica (solo para pruebas locales)
@@ -637,6 +658,8 @@ if __name__ == "__main__":
     log(f"Bot escuchando en el puerto {PORT}" + ("  (MODO PRUEBA: no envía nada)" if MODO_PRUEBA else ""))
     if TOKEN_FACEBOOK and not IG_ACCOUNT_ID:
         raise SystemExit("Falta IG_ACCOUNT_ID en el .env (el ID de la cuenta de Instagram)")
+    if not MODO_PRUEBA and not TOKEN_FACEBOOK:
+        MIS_IDS.update(obtener_mis_ids(ACCESS_TOKEN))
     if not MODO_PRUEBA and not TOKEN_FACEBOOK:
         threading.Thread(target=ciclo_renovacion, daemon=True).start()
     ThreadingHTTPServer(("0.0.0.0", PORT), Manejador).serve_forever()
